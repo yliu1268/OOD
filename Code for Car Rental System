@@ -1,0 +1,143 @@
+Here is the high-level definition for the classes described above.
+
+Enums, data types and constants: Here are the required enums, data types, and constants:
+
+from enum import Enum
+
+
+class BillItemType(Enum):
+    BASE_CHARGE, ADDITIONAL_SERVICE, FINE, OTHER = 1, 2, 3, 4
+
+
+class VehicleLogType(Enum):
+    ACCIDENT, FUELING, CLEANING_SERVICE, OIL_CHANGE, REPAIR, OTHER = 1, 2, 3, 4, 5, 6
+
+
+class VanType(Enum):
+    PASSENGER, CARGO = 1, 2
+
+
+class CarType(Enum):
+    ECONOMY, COMPACT, INTERMEDIATE, STANDARD, FULL_SIZE, PREMIUM, LUXURY = 1, 2, 3, 4, 5, 6, 7
+
+
+class VehicleStatus(Enum):
+    AVAILABLE, RESERVED, LOANED, LOST, BEING_SERVICED, OTHER = 1, 2, 3, 4, 5, 6
+
+
+class ReservationStatus(Enum):
+    ACTIVE, PENDING, CONFIRMED, COMPLETED, CANCELLED, NONE = 1, 2, 3, 4, 5, 6
+
+
+class AccountStatus(Enum):
+    ACTIVE, CLOSED, CANCELED, BLACKLISTED, BLOCKED = 1, 2, 3, 4, 5
+
+
+class PaymentStatus(Enum):
+    UNPAID, PENDING, COMPLETED, FILLED, DECLINED, CANCELLED, ABANDONED, SETTLING, SETTLED, REFUNDED = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+
+
+class Address:
+    def __init__(self, street, city, state, zip_code, country):
+        self.__street_address = street
+        self.__city = city
+        self.__state = state
+        self.__zip_code = zip_code
+        self.__country = country
+
+
+class Person():
+    def __init__(self, name, address, email, phone):
+        self.__name = name
+        self.__address = address
+        self.__email = email
+        self.__phone = phone
+
+
+Account, Member, Receptionist, and Additional Driver: These classes represent different people that interact with our system:
+
+from abc import ABC
+from .constants import AccountStatus
+
+
+# For simplicity, we are not defining getter and setter functions. The reader can
+# assume that all class attributes are private and accessed through their respective
+# public getter methods and modified only through their public methods function.
+
+
+class Account(ABC):
+    def __init__(self, id, password, person, status=AccountStatus.NONE):
+        self.__id = id
+        self.__password = password
+        self.__status = AccountStatus.NONE
+        self.__person = person
+
+    def reset_password(self):
+        None
+
+
+class Member(Account):
+    def __init__(self):
+        self.__total_vehicles_reserved = 0
+
+    def get_reservations(self):
+        None
+
+
+class Receptionist(Account):
+    def __init__(self, date_joined):
+        self.__date_joined = date_joined
+
+    def search_member(self, name):
+        None
+
+
+class AdditionalDriver:
+    def __init__(self, id, person):
+        self.__driver_id = id
+        self.__person = person
+
+
+CarRentalSystem and CarRentalLocation: These classes represent the top level classes:
+class CarRentalLocation:
+    def __init__(self, name, address):
+        self.__name = name
+        self.__location = address
+
+    def get_location(self):
+        return self.__location
+
+
+class CarRentalSystem:
+    def __init__(self, name):
+        self.__name = name
+        self.__locations = []
+
+    def add_new_location(self, location):
+        None
+
+
+VehicleInventory and Search: VehicleInventory will implement an interface ‘Search’ to facilitate the searching of vehicles:
+from abc import ABC
+
+
+class Search(ABC):
+    def search_by_type(self, type):
+        None
+
+    def search_by_model(self, model):
+        None
+
+
+class VehicleInventory(Search):
+    def __init__(self):
+        self.__vehicle_types = {}
+        self.__vehicle_models = {}
+
+    def search_by_type(self, query):
+        # return all vehicles of the given type.
+        return self.__vehicle_types.get(query)
+
+    def search_by_model(self, query):
+        # return all vehicles of the given model.
+        return self.__vehicle_models.get(query)
